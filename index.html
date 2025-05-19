@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -65,7 +64,7 @@
 <body>
   <div class="sc__wrapper">
     <div id="js--sc--container" class="sc__container">
-      <img id="backgroundImage" src="bild-unten.jpeg" alt="Background Image">
+      <img id="backgroundImage" src="bild-unten.jpg" alt="Background Image">
       <canvas id="scratchCanvas"></canvas>
     </div>
   </div>
@@ -89,7 +88,7 @@
 
       // Load the front image
       const frontImage = new Image();
-      frontImage.src = 'bild-oben.jpeg';
+      frontImage.src = 'bild-oben.jpg';
       frontImage.onload = () => {
         ctx.drawImage(frontImage, 0, 0, containerWidth, containerHeight);
         ctx.globalCompositeOperation = 'destination-out';
