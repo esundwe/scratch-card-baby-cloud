@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digitale Rubbelkarte</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .container {
+            position: relative;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rubbel die obere Schicht frei!</h1>
+    <div class="container">
+        <img id="backgroundImage" src="bild-unten.jpg" alt="Hintergrundbild">
+        <canvas id="scratchCanvas"></canvas>
+    </div>
+    <script>
+        const canvas = document.getElementById('scratchCanvas');
+        const context = canvas.getContext('2d');
+        const backgroundImage = document.getElementById('backgroundImage');
+        const overlayImage = new Image();
+        overlayImage.src = "bild-oben.jpg"; 
+
+        function setupCanvas() {
+            canvas.width = backgroundImage.width;
+            canvas.height = backgroundImage.height;
+            context.drawImage(overlayImage, 0, 0, canvas.width, canvas.height);
+        }
+
+        overlayImage.onload = setupCanvas;
+
+        canvas.addEventListener('mousemove', function(event) {
+            if (event.buttons !== 1) return;
+            const x = event.offsetX;
+            const y = event.offsetY;
+            context.globalCompositeOperation = 'destination-out';
+            context.arc(x, y, 15, 0, Math.PI * 2);
+            context.fill();
+        });
+    </script>
+</body>
+</html>
