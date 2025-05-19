@@ -1,29 +1,35 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
   <title>Digitale Rubbelkarte</title>
   <style>
+    body {
+      margin: 0;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #container {
+      position: relative;
+    }
     #canvas {
       position: absolute;
       top: 0;
       left: 0;
-      cursor: crosshair;
+      z-index: 2;
     }
-    #container {
-      position: relative;
-      width: 500px; /* Passe die Größe an dein Bild an */
-    }
-    #background {
+    #imageBelow {
       display: block;
-      width: 100%;
     }
   </style>
 </head>
 <body>
   <div id="container">
-    <img id="background" src="Image_2.jpg" alt="Hintergrundbild">
+    <img id="imageBelow" src="Image_1.jpg" alt="Bild darunter">
     <canvas id="canvas"></canvas>
   </div>
 
@@ -31,28 +37,74 @@
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     const container = document.getElementById('container');
-    const img = new Image();
-    img.src = 'Image_1.png'; // Bild mit Wolke
+    const imageAbove = new Image();
+    imageAbove.src = 'Image_2.jpg'; // Bild mit Wolke
 
-    img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
+    imageAbove.onload = () => {
+      canvas.width = imageAbove.width;
+      canvas.height = imageAbove.height;
+      container.style.width = imageAbove.width + 'px';
+      container.style.height = imageAbove.height + 'px';
+      ctx.drawImage(imageAbove, 0, 0);
     };
 
     let isDrawing = false;
 
-    canvas.addEventListener('mousedown', () => isDrawing = true);
-    canvas.addEventListener('mouseup', () => isDrawing = false);
-    canvas.addEventListener('mousemove', (e) => {
-      if (!isDrawing) return;
+    function getMousePos(canvas, e) {
       const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    }
+
+    function getTouchPos(canvas, e) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top
+      };
+    }
+
+    function scratch(x, y) {
       ctx.globalCompositeOperation = 'destination-out';
       ctx.beginPath();
-      ctx.arc(x, y, 20, 0, Math.PI * 2, false);
+      ctx.arc(x, y, 30, 0, Math.PI * 2, false);
       ctx.fill();
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+      isDrawing = true;
+      const pos = getMousePos(canvas, e);
+      scratch(pos.x, pos.y);
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (!isDrawing) return;
+      const pos = getMousePos(canvas, e);
+      scratch(pos.x, pos.y);
+    });
+
+    canvas.addEventListener('mouseup', () => {
+      isDrawing = false;
+    });
+
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      isDrawing = true;
+      const pos = getTouchPos(canvas, e);
+      scratch(pos.x, pos.y);
+    });
+
+    canvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!isDrawing) return;
+      const pos = getTouchPos(canvas, e);
+      scratch(pos.x, pos.y);
+    });
+
+    canvas.addEventListener('touchend', () => {
+      isDrawing = false;
     });
   </script>
 </body>
