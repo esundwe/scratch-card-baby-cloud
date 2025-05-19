@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Digitale Rubbelkarte</title>
+    <style>
+        body {
+            background-color: #ffffff;
+            text-align: center;
+            font-family: sans-serif;
+        }
+        .scratch-container {
+            width: 90%;
+            max-width: 400px;
+            margin: 40px auto;
+            position: relative;
+        }
+        canvas {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h2>Rubbel die Karte frei!</h2>
+    <div class="scratch-container">
+        <canvas id="scratch-card"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/scratchcard-js@1.2.2/dist/scratchcard.min.js"></script>
+    <script>
+        const sc = new ScratchCard('#scratch-card', {
+            scratchType: ScratchType.BRUSH,
+            containerWidth: 354,
+            containerHeight: 500,
+            imageForwardSrc: '1B9AA4E8-0D2A-4E1E-A022-96D0DA0F0E2F.jpeg',
+            imageBackgroundSrc: 'C3568C9D-5F56-47EE-A80C-FA0F4BAF657D.jpeg',
+            brushSrc: null,
+            scratchDownCallback: () => {
+                console.log('Rubbeln gestartet!');
+            },
+            scratchMoveCallback: () => {},
+            scratchUpCallback: () => {},
+            percentToFinish: 50,
+            callback: () => {
+                console.log('Fertig freigerubbelt!');
+            }
+        });
+
+        sc.init().catch((error) => {
+            console.error(error);
+        });
+    </script>
+</body>
+</html>
